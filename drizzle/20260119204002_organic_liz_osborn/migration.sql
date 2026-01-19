@@ -1,7 +1,7 @@
 CREATE TABLE "blobs" (
 	"id" varchar PRIMARY KEY,
-	"updatedAt" timestamp NOT NULL,
-	"expiresAt" integer,
+	"updatedAt" bigint,
+	"expiresAt" bigint,
 	"ciphertext" bytea NOT NULL,
 	"iv" bytea NOT NULL,
 	"user_id" integer,

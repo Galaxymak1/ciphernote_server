@@ -1,4 +1,4 @@
-import { pgTable} from "drizzle-orm/pg-core";
+import {index, pgTable} from "drizzle-orm/pg-core";
 import * as t from "drizzle-orm/pg-core";
 import {defineRelations} from "drizzle-orm"
 
@@ -13,15 +13,19 @@ export const users = pgTable("users",{
 
 export const blobs = pgTable("blobs", {
     id: t.varchar().primaryKey(),
-    updatedAt: t.timestamp().notNull(),
-    expiresAt: t.integer(),
+    updatedAt: t.bigint({mode:"bigint"}),
+    expiresAt: t.bigint({mode:"bigint"}),
     ciphertext: t.bytea().notNull(),
     iv: t.bytea().notNull(),
     userId: t.integer("user_id").references(() => users.id),
     type: t.varchar().notNull(),
     name: t.varchar().notNull(),
-
-})
+}, (table) =>
+        [index("blobs_user_updated_idx").on(
+        table.userId,
+        table.updatedAt
+    )
+]);
 
 export const vaults = pgTable("vaults", {
     id: t.varchar().primaryKey(),
