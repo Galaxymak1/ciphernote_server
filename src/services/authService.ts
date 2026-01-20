@@ -3,6 +3,7 @@ import {UserRepository} from "../repositories/userRepository";
 import {AuthModel} from "../types/AuthModel";
 import jwt from "jsonwebtoken";
 import * as process from "node:process";
+import {TokenService} from "./tokenService";
 
 export abstract class AuthService {
     static async signIn({email, password} : AuthModel.signUpBody): Promise<AuthModel.signInResponse | undefined>  {
@@ -14,7 +15,7 @@ export abstract class AuthService {
             if (await bun.password.verify(password,user.password )) {
                 return {
                     email: user.email,
-                    accessToken : jwt.sign({email:email},process.env.JWT_PRIVATE_KEY!,{expiresIn: "30M"})
+                    accessToken : TokenService.signAccess({sub:user.id,email:user.email}),
                 }
             }else {
                 new Error(`Incorrect email or password`)

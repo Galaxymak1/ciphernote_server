@@ -20,6 +20,7 @@ export const blobs = pgTable("blobs", {
     userId: t.integer("user_id").references(() => users.id),
     type: t.varchar().notNull(),
     name: t.varchar().notNull(),
+    deletedAt : t.bigint({mode:"bigint"}),
 }, (table) =>
         [index("blobs_user_updated_idx").on(
         table.userId,
