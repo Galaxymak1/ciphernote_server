@@ -13,14 +13,14 @@ export const users = pgTable("users",{
 
 export const blobs = pgTable("blobs", {
     id: t.varchar().primaryKey(),
-    updatedAt: t.bigint({mode:"bigint"}),
-    expiresAt: t.bigint({mode:"bigint"}),
+    updatedAt: t.bigint({ mode: "number" }),
+    expiresAt: t.bigint({ mode: "number" }),
     ciphertext: t.bytea().notNull(),
     iv: t.bytea().notNull(),
     userId: t.integer("user_id").references(() => users.id),
     type: t.varchar().notNull(),
     name: t.varchar().notNull(),
-    deletedAt : t.bigint({mode:"bigint"}),
+    deletedAt: t.bigint({ mode: "number" }),
 }, (table) =>
         [index("blobs_user_updated_idx").on(
         table.userId,

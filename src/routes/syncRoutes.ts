@@ -40,7 +40,7 @@ export const sync = new Elysia({ prefix: "/sync" })
         },
         {
             body: t.Object({
-                since: t.BigInt(),
+                since: t.Integer(),
             }),
         }
     )

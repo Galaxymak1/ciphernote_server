@@ -7,14 +7,14 @@ export abstract class BlobsRepository {
         return db.select().from(blobs).where(eq(blobs.userId,userId))
     }
 
-    static async getAllByIdAndUpdatedAt(since : bigint , userId : number) {
+    static async getAllByIdAndUpdatedAt(since : number , userId : number) {
         return db
             .select()
             .from(blobs)
             .where(
                 and(
                     eq(blobs.userId,userId),
-                    gt(blobs.updatedAt,since)
+                    gt(blobs.updatedAt,since),
                 ),
             )
             .orderBy(asc(blobs.updatedAt))
@@ -24,8 +24,8 @@ export abstract class BlobsRepository {
                         id: string
                         ciphertext: Uint8Array
                         iv: Uint8Array
-                        updatedAt: bigint
-                        expiresAt?: bigint
+                        updatedAt: number
+                        expiresAt?: number
                         type: string
                         name: string
                     }, userId: number
@@ -37,18 +37,19 @@ export abstract class BlobsRepository {
                 ...blob,
                 ciphertext: Buffer.from(blob.ciphertext),
                 iv : Buffer.from(blob.iv),
+                userId : userId
             })
             .onConflictDoUpdate({
                 target:blobs.id,
                 set:{
                     ciphertext: sql`excluded.ciphertext`,
                     iv: sql`excluded.iv`,
-                    updatedAt: sql`excluded.updated_at`,
-                    expiresAt: sql`excluded.expires_at`,
+                    updatedAt: sql`excluded."updatedAt"`,
+                    expiresAt: sql`excluded."expiresAt"`,
                     name: sql`excluded.name`,
                     type: sql`excluded.type`,
                 },
-                where: sql`excluded.updated_at > blobs.updated_at`,
+                where: sql`excluded."updatedAt" > blobs."updatedAt"`,
             })
     }
 

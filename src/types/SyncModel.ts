@@ -5,10 +5,10 @@ export namespace SyncModel {
     export type PushBody = {
         localBlobs: Array<{
             id: string
-            updatedAt: bigint
-            expiresAt?: bigint
-            ciphertext: Uint8Array
-            iv: Uint8Array
+            updatedAt: number
+            expiresAt?: number
+            ciphertext: string
+            iv: string
             type: string
             name: string
         }>
@@ -21,10 +21,10 @@ export namespace SyncModel {
 
     export const SyncBlobSchema = t.Object({
         id: t.String(),
-        updatedAt: t.BigInt(),
-        expiresAt: t.Optional(t.BigInt()),
-        ciphertext: t.Uint8Array(),
-        iv: t.Uint8Array(),
+        updatedAt: t.Integer(),
+        expiresAt: t.Optional(t.Integer()),
+        ciphertext: t.String(),
+        iv: t.String(),
         type: t.String(),
         name: t.String(),
     })
